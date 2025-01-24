@@ -71,17 +71,22 @@ def get_one_scene(s):
     calib_aux_lidar = {}
     if os.path.exists(os.path.join(scene_dir, "calib")):
         if os.path.exists(os.path.join(scene_dir, "calib","camera")):
-            calibs = os.listdir(os.path.join(scene_dir, "calib", "camera"))
-            for c in calibs:
-                calib_file = os.path.join(scene_dir, "calib", "camera", c)
-                calib_name, ext = os.path.splitext(c)
-                if os.path.isfile(calib_file) and ext==".json":
-                    #print(calib_file)
-                    with open(calib_file)  as f:
-                        cal = json.load(f)
-                        calib_camera[calib_name] = cal
-
-    
+            calib_timestamps = os.listdir(os.path.join(scene_dir, "calib", "camera"))
+            for ct in calib_timestamps:
+                calib_folder = os.path.join(scene_dir, "calib", "camera", ct)
+                calib_folder_files = os.listdir(calib_folder)
+                for c in calib_folder_files:
+                    calib_file = os.path.join(calib_folder, c)
+                    calib_name, ext = os.path.splitext(c)
+                    if os.path.isfile(calib_file) and ext==".json":
+                        #print(calib_file)
+                        with open(calib_file)  as f:
+                            cal = json.load(f)
+                            if calib_name in calib_camera:
+                                calib_camera[calib_name][ct] = cal
+                            else:
+                                calib_camera[calib_name] = {ct: cal}
+        
         if os.path.exists(os.path.join(scene_dir, "calib", "radar")):
             calibs = os.listdir(os.path.join(scene_dir, "calib", "radar"))
             for c in calibs:

@@ -2,6 +2,7 @@
 import {vector4to3, vector3_nomalize, psr_to_xyz, matmul} from "./util.js"
 import {globalObjectCategory, } from './obj_cfg.js';
 import { MovableView } from "./popup_dialog.js";
+import {logger} from "./log.js"
 
 function BoxImageContext(ui){
 
@@ -11,7 +12,7 @@ function BoxImageContext(ui){
     this.updateFocusedImageContext = function(box){
         var scene_meta = box.world.frameInfo.sceneMeta;
 
-
+        console.log('scene_meta calib:', scene_meta.calib);
         let bestImage = choose_best_camera_for_point(
             scene_meta,
             box.position);
@@ -19,6 +20,7 @@ function BoxImageContext(ui){
         if (!bestImage){
             return;           
         }
+        //logger.log(`Scene meta value ${scene_meta}`);
 
         if (!scene_meta.calib.camera){
             return;
@@ -469,13 +471,17 @@ class ImageContext extends MovableView{
 
     getCalib(){
         var scene_meta = this.world.sceneMeta;
-           
+        var frame_info = this.world.frameInfo.frame
+        //logger.log(`Scene meta value new ${JSON.stringify(scene_meta.calib.camera, null, 2)}`);   
+        console.dir(scene_meta, { depth: null, colors: true });
+        console.log(`current_frame`, frame_info)
         if (!scene_meta.calib.camera){
             return null;
         }
 
         //var active_camera_name = this.world.cameras.active_name;
-        var calib = scene_meta.calib.camera[this.name];
+        var calib = scene_meta.calib.camera[this.name][frame_info];
+        //logger.log(`Scene meta value new ${JSON.stringify(calib, null, 2)}`);   
 
         return calib;
     }
@@ -1208,3 +1214,4 @@ function  choose_best_camera_for_point(scene_meta, center){
 
 
 export {ImageContextManager, BoxImageContext};
+
