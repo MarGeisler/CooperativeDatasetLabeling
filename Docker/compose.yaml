@@ -11,3 +11,4 @@ services:
       - "8081"
     volumes:
       - /media/ssd1/CooperativeDatasetLabeling:/root/CooperativeDatasetLabeling:rw
+      - /media/ssd1/extracted_data/20241126_0022_crossing1_00:/root/CooperativeDatasetLabeling/data/temp:rw

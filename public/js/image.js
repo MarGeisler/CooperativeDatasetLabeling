@@ -463,24 +463,31 @@ class ImageContext extends MovableView{
             }
         }
     }
-
-
-    // all boxes
-    
+    // all boxes    
 
 
     getCalib(){
         var scene_meta = this.world.sceneMeta;
-        var frame_info = this.world.frameInfo.frame
-        //logger.log(`Scene meta value new ${JSON.stringify(scene_meta.calib.camera, null, 2)}`);   
-        console.dir(scene_meta, { depth: null, colors: true });
-        console.log(`current_frame`, frame_info)
+        var current_frame_timestamp = this.world.frameInfo.frame
+        //logger.log(`Scene meta value new ${JSON.stringify(scene_meta.calib.camera, null, 2)}`);  
+        //this.name = camera_name
+        console.dir(scene_meta.calib.camera, { depth: null, colors: true });
+        //logger.log(`this_name`, this.name);
         if (!scene_meta.calib.camera){
             return null;
         }
 
         //var active_camera_name = this.world.cameras.active_name;
-        var calib = scene_meta.calib.camera[this.name][frame_info];
+        var current_camera_calib_object_keys = Object.keys(scene_meta.calib.camera[this.name])
+
+        if (current_camera_calib_object_keys.length === 1) {
+            //console.log(`The keys inside for this object are`, current_camera_calib_object_keys[0]);
+            //console.log(`This leads to the following item`, scene_meta.calib.camera[this.name][current_camera_calib_object_keys[0]])
+            var calib = scene_meta.calib.camera[this.name][current_camera_calib_object_keys[0]];
+        }
+        else {
+            var calib = scene_meta.calib.camera[this.name][current_frame_timestamp];
+        }
         //logger.log(`Scene meta value new ${JSON.stringify(calib, null, 2)}`);   
 
         return calib;

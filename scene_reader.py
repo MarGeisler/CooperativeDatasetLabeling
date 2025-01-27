@@ -71,21 +71,21 @@ def get_one_scene(s):
     calib_aux_lidar = {}
     if os.path.exists(os.path.join(scene_dir, "calib")):
         if os.path.exists(os.path.join(scene_dir, "calib","camera")):
-            calib_timestamps = os.listdir(os.path.join(scene_dir, "calib", "camera"))
-            for ct in calib_timestamps:
-                calib_folder = os.path.join(scene_dir, "calib", "camera", ct)
-                calib_folder_files = os.listdir(calib_folder)
-                for c in calib_folder_files:
-                    calib_file = os.path.join(calib_folder, c)
-                    calib_name, ext = os.path.splitext(c)
+            camera_names = os.listdir(os.path.join(scene_dir, "calib", "camera"))
+            for cam in camera_names:
+                camera_calib_folder = os.path.join(scene_dir, "calib", "camera", cam)
+                camera_calib_files = os.listdir(camera_calib_folder)
+                for c in camera_calib_files:
+                    calib_file = os.path.join(camera_calib_folder, c)
+                    calib_file_name, ext = os.path.splitext(c)
                     if os.path.isfile(calib_file) and ext==".json":
                         #print(calib_file)
                         with open(calib_file)  as f:
                             cal = json.load(f)
-                            if calib_name in calib_camera:
-                                calib_camera[calib_name][ct] = cal
+                            if cam in calib_camera:
+                                calib_camera[cam][calib_file_name] = cal
                             else:
-                                calib_camera[calib_name] = {ct: cal}
+                                calib_camera[cam] = {calib_file_name: cal}
         
         if os.path.exists(os.path.join(scene_dir, "calib", "radar")):
             calibs = os.listdir(os.path.join(scene_dir, "calib", "radar"))
@@ -249,4 +249,5 @@ def save_annotations(scene, frame, anno):
             json.dump(anno, outfile)
 
 if __name__ == "__main__":
-    print(get_all_scenes())
+    all_scenes = get_all_scenes()
+    print(all_scenes)
